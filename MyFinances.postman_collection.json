@@ -1,0 +1,258 @@
+{
+  "info": {
+    "name": "My Finances API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",      "value": "http://localhost:8080/api/v1" },
+    { "key": "accessToken",  "value": "" },
+    { "key": "refreshToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var r = pm.response.json();",
+            "if(r.data){ pm.collectionVariables.set('accessToken', r.data.accessToken); pm.collectionVariables.set('refreshToken', r.data.refreshToken); }"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/signup",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Raj Kumar\",\n  \"email\": \"raj@example.com\",\n  \"password\": \"password123\"\n}" }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var r = pm.response.json();",
+            "if(r.data){ pm.collectionVariables.set('accessToken', r.data.accessToken); pm.collectionVariables.set('refreshToken', r.data.refreshToken); }"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"demo@finance.com\",\n  \"password\": \"password123\"\n}" }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/refresh",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Summary",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboard/summary",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Income",
+      "item": [
+        {
+          "name": "List Incomes",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/incomes?page=0&size=20", "query": [
+              { "key": "page", "value": "0" }, { "key": "size", "value": "20" }
+            ]},
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        },
+        {
+          "name": "Get Income by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/incomes/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        },
+        {
+          "name": "Add Income",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/incomes",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Freelance Project\",\n  \"category\": \"Freelance\",\n  \"categoryEnum\": \"FREELANCE\",\n  \"amount\": 25000,\n  \"transactionDate\": \"2026-04-01\",\n  \"isRecurring\": false,\n  \"description\": \"React dashboard project\"\n}" }
+          }
+        },
+        {
+          "name": "Update Income",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/incomes/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Monthly Salary - TCS\",\n  \"category\": \"Salary\",\n  \"categoryEnum\": \"SALARY\",\n  \"amount\": 500000,\n  \"transactionDate\": \"2026-04-01\",\n  \"isRecurring\": true\n}" }
+          }
+        },
+        {
+          "name": "Delete Income",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/incomes/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expense",
+      "item": [
+        {
+          "name": "List Expenses",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/expenses?page=0&size=20", "query": [
+              { "key": "page", "value": "0" }, { "key": "size", "value": "20" }
+            ]},
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        },
+        {
+          "name": "Add Expense",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/expenses",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Netflix Subscription\",\n  \"category\": \"Entertainment\",\n  \"categoryEnum\": \"ENTERTAINMENT\",\n  \"amount\": 649,\n  \"transactionDate\": \"2026-04-05\"\n}" }
+          }
+        },
+        {
+          "name": "Update Expense",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/expenses/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"House Rent\",\n  \"category\": \"Rent\",\n  \"categoryEnum\": \"RENT\",\n  \"amount\": 19000,\n  \"transactionDate\": \"2026-04-05\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Expense",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/expenses/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Investment",
+      "item": [
+        {
+          "name": "List Investments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/investments",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        },
+        {
+          "name": "Add Investment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/investments",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"HDFC Mid Cap Fund\",\n  \"type\": \"MUTUAL_FUND\",\n  \"investedAmount\": 50000,\n  \"currentValue\": 58000,\n  \"startDate\": \"2025-01-01\"\n}" }
+          }
+        },
+        {
+          "name": "Update Investment",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/investments/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mirae Asset Large Cap Fund\",\n  \"type\": \"MUTUAL_FUND\",\n  \"investedAmount\": 150000,\n  \"currentValue\": 185000,\n  \"startDate\": \"2024-04-01\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Investment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/investments/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Loan",
+      "item": [
+        {
+          "name": "List Loans",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/loans",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        },
+        {
+          "name": "Add Loan",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/loans",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Car Loan - Maruti Swift\",\n  \"type\": \"CAR\",\n  \"totalAmount\": 600000,\n  \"outstandingAmount\": 420000,\n  \"emiAmount\": 12000,\n  \"interestRate\": 9.5,\n  \"emiDueDate\": \"2026-04-15\",\n  \"lenderName\": \"ICICI Bank\"\n}" }
+          }
+        },
+        {
+          "name": "Update Loan",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/loans/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",   "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"SBI Home Loan\",\n  \"type\": \"HOME\",\n  \"totalAmount\": 5000000,\n  \"outstandingAmount\": 3750000,\n  \"emiAmount\": 45000,\n  \"interestRate\": 8.5,\n  \"emiDueDate\": \"2026-05-01\",\n  \"lenderName\": \"State Bank of India\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Loan",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/loans/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}
